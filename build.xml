@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="minos" default="dist" basedir=".">
+	<property name="src" location="src" />
+	<property name="bin" location="bin" />
+	<property name="lib" location="lib" />
+	<property name="current.dir" location="." />
+	<property name="out" location="mp3regex.jar" />
+
+	<tstamp>
+		<format property="year" pattern="yyyy" />
+	</tstamp>
+
+	<target name="init">
+		<mkdir dir="${bin}" />
+	</target>
+
+	<path id="class.path">
+		<fileset dir="${lib}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	
+	<pathconvert property="manifest.class.path" pathsep=" " refid="class.path">
+		<map from="${current.dir}" to="." />
+	</pathconvert>
+
+	<target name="compile" depends="init">
+		<javac srcdir="${src}" destdir="${bin}" deprecation="on"
+				optimize="on" debug="no" debuglevel="none" source="1.6"
+				classpathref="class.path" includeantruntime="no" />
+	</target>
+
+	<target name="package">
+		<jar jarfile="${out}" basedir="${bin}">
+			<manifest>
+				<attribute name="Main-Class" value="mp3regex.ui.Launcher" />
+				<attribute name="Class-Path" value="${manifest.class.path}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="dist" depends="compile">
+		<antcall target="package" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${bin}" />
+		<delete file="${out}" />
+	</target>
+</project>
